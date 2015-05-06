@@ -13,7 +13,7 @@ public class PagaPropertyValues {
 	public MoneyTransfer getPropertyValues() {
 		MoneyTransfer moneyTransfer = new MoneyTransfer();
 		Properties prop = new Properties();
-		String propFileName = "com/ng/mats/psa/mt/fortis/util/config.properties";
+		String propFileName = "com/ng/mats/psa/mt/paga/util/config.properties";
 
 		InputStream inputStream = getClass().getClassLoader()
 				.getResourceAsStream(propFileName);
