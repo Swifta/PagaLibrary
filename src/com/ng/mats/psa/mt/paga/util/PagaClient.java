@@ -13,7 +13,7 @@ public class PagaClient {
 			.getName());
 	RestClient restClient = new RestClient();
 
-	public PagaResponse performCashUIn(MoneyTransfer moneyTransfer) {
+	public PagaResponse performCashIn(MoneyTransfer moneyTransfer) {
 		String endPointUrl = "moneyTransfer";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -83,7 +83,7 @@ public class PagaClient {
 				.valueOf(moneyTransfer.getReferenceNumberSize()));
 		StringBuilder sBuilder = new StringBuilder();
 		sBuilder.append(referenceNumber);
-		sBuilder.append(moneyTransfer.getSenderPhone()); // customer (phone
+		sBuilder.append(moneyTransfer.getRecieverPhone()); // customer (phone
 		sBuilder.append(moneyTransfer.getAmount()); // amount
 		sBuilder.append(moneyTransfer.getWithdrawalCode());
 		sBuilder.append(moneyTransfer.getAppId());
@@ -93,9 +93,8 @@ public class PagaClient {
 		try {
 			inputObject.put("referenceNumber", referenceNumber);
 			inputObject.put("locale", moneyTransfer.getLocale());
-			inputObject
-					.put("senderPhoneNumber", moneyTransfer.getSenderPhone());
-			inputObject.put("senderName", moneyTransfer.getSenderName());
+			inputObject.put("customerPhoneNumber",
+					moneyTransfer.getRecieverPhone());
 			inputObject.put("amount", moneyTransfer.getAmount());
 			inputObject
 					.put("withdrawalCode", moneyTransfer.getWithdrawalCode());

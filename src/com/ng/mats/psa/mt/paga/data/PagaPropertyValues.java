@@ -69,6 +69,8 @@ public class PagaPropertyValues {
 				+ parameterType));
 		moneyTransfer.setAccountName(prop.getProperty("Accountname_"
 				+ parameterType));
+		moneyTransfer.setWithdrawalCode(prop.getProperty("Withdrawalcode_"
+				+ parameterType));
 
 		return moneyTransfer;
 	}
