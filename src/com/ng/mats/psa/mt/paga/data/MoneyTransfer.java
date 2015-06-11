@@ -23,6 +23,7 @@ public class MoneyTransfer {
 	private String accountNumber = "";
 	private String accountName = "";
 	private String transactionId = "";
+	private String accountPhoneNumber = "";
 
 	public String getAppId() {
 		return appId;
@@ -190,6 +191,14 @@ public class MoneyTransfer {
 
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	public String getAccountPhoneNumber() {
+		return accountPhoneNumber;
+	}
+
+	public void setAccountPhoneNumber(String accountPhoneNumber) {
+		this.accountPhoneNumber = accountPhoneNumber;
 	}
 
 	public MoneyTransfer() {

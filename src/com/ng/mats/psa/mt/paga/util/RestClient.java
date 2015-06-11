@@ -41,8 +41,9 @@ public class RestClient {
 		MoneyTransfer moneyTransfer = new PagaPropertyValues()
 				.getPropertyValues();
 		PagaClient pagaClient = new PagaClient();
-		pagaClient.performCashIn(moneyTransfer);
-		// pagaClient.performCashOut(moneyTransfer);
+		// pagaClient.performCashIn(moneyTransfer);
+		pagaClient.performCashOut(moneyTransfer);
+		// pagaClient.performWalletToBank(moneyTransfer);
 
 	}
 
@@ -51,11 +52,10 @@ public class RestClient {
 			MoneyTransfer moneyTransfer) {
 		String output = "";
 		try {
-			moneyTransfer.setAppUrl(moneyTransfer.getAppUrl().concat(
-					endPointUrl));
+			String appUrl = moneyTransfer.getAppUrl().concat(endPointUrl);
 			URL url = new URL(
 			// "https://yfs4jh264ds.mypaga.com/paga-web/customer/"
-					moneyTransfer.getAppUrl());
+					appUrl);
 			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 			conn.setRequestMethod("POST");
 			conn.setDoOutput(true);
@@ -77,12 +77,12 @@ public class RestClient {
 			String input = inputObject.toString();
 
 			conn.setRequestProperty("hash", hashedString);
-			logger.info("URL ---->" + moneyTransfer.getAppUrl());
+			logger.info("URL ---->" + appUrl);
 			logger.info("String before hashing --->" + stringBuilder);
 			logger.info("Principal ---->" + moneyTransfer.getAppUsername());
 			logger.info("Credential ---->" + moneyTransfer.getPassword());
 			logger.info("The input parameters --->" + input);
-			logger.info(hashedString);
+			logger.info("The hashed string ------>" + hashedString);
 			// input should be the data formatted as a JSON.
 
 			OutputStream os = conn.getOutputStream();
@@ -140,6 +140,10 @@ public class RestClient {
 		SSLSocketFactory socketFactory = null;
 		logger.info("------------------------Before creating the File");
 		try {
+			System.setProperty("jsse.enableSNIExtension", "false");
+			System.setProperty("javax.net.debug", "ssl");
+			System.setProperty("https.protocols", "SSLv3");
+			// System.setProperty("https.protocols", "TLSV");
 			File pKeyFile = new File(pKeyFilePath);
 			logger.info("-------------------------After locating the jks");
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory
