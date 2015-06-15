@@ -3,12 +3,10 @@ package com.ng.mats.psa.mt.paga.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -105,8 +103,6 @@ public class RestClient {
 			}
 			conn.disconnect();
 
-		} catch (MalformedURLException ex) {
-			ex.printStackTrace();
 		} catch (IOException exp) {
 			exp.printStackTrace();
 		}
@@ -139,46 +135,46 @@ public class RestClient {
 			String pKeyPassword) {
 		SSLSocketFactory socketFactory = null;
 		logger.info("------------------------Before creating the File");
+		/*
+		 * System.getProperties().remove("javax.net.ssl.trustStore");
+		 * System.getProperties().remove("javax.net.ssl.trustStoreType");
+		 * System.getProperties().remove("javax.net.ssl.trustStorePassword");
+		 * System.getProperties().remove("https.protocols");
+		 */
+		/*
+		 * System.setProperty("javax.net.ssl.trustStore", pKeyFilePath);
+		 * System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+		 * System.setProperty("javax.net.ssl.trustStorePassword", pKeyPassword);
+		 * System.setProperty("jsse.enableSNIExtension", "false");
+		 * System.setProperty("javax.net.debug", "ssl");
+		 * System.setProperty("https.protocols", "SSLv3");
+		 * System.setProperty("https.protocols", "TLSV");
+		 */
 		try {
-			System.setProperty("jsse.enableSNIExtension", "false");
-			System.setProperty("javax.net.debug", "ssl");
-			System.setProperty("https.protocols", "SSLv3");
-			// System.setProperty("https.protocols", "TLSV");
+
 			File pKeyFile = new File(pKeyFilePath);
-			logger.info("-------------------------After locating the jks");
+			logger.info("-------------------------After locating the jks====="
+					+ pKeyFilePath);
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory
 					.getInstance("SunX509");
 			KeyStore keyStore = KeyStore.getInstance("JKS");
-
+			logger.info("-------------------------After instantiating jks");
 			InputStream keyInput = new FileInputStream(pKeyFile);
+			logger.info("-------------------------After instantiating the File input stream");
 			keyStore.load(keyInput, pKeyPassword.toCharArray());
+			logger.info("-------------------------After loading the jks and password");
 			keyInput.close();
-
+			logger.info("-------------------------After closing the key input");
 			keyManagerFactory.init(keyStore, pKeyPassword.toCharArray());
-
+			logger.info("-------------------------After initiating the key manager factory");
 			SSLContext context = SSLContext.getInstance("SSL");
 			context.init(keyManagerFactory.getKeyManagers(), null,
 					new SecureRandom());
 			socketFactory = context.getSocketFactory();
-			;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generatedcatch block
-			e.printStackTrace();
-		} catch (UnrecoverableKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (java.security.cert.CertificateException e) {
+			logger.info("-------------------------After getting socket factory");
+		} catch (NoSuchAlgorithmException | KeyStoreException | IOException
+				| UnrecoverableKeyException | KeyManagementException
+				| java.security.cert.CertificateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
