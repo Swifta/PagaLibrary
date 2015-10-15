@@ -24,6 +24,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.RandomStringUtils;
+import org.json.me.JSONException;
 import org.json.me.JSONObject;
 
 import com.ng.mats.psa.mt.paga.data.MoneyTransfer;
@@ -34,7 +35,7 @@ public class RestClient {
 	private static final Logger logger = Logger.getLogger(RestClient.class
 			.getName());
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JSONException {
 		logger.info("Starting connection....");
 		MoneyTransfer moneyTransfer = new PagaPropertyValues()
 				.getPropertyValues();
@@ -47,8 +48,9 @@ public class RestClient {
 
 	public static String connectToPaga(String endPointUrl,
 			String stringBuilder, JSONObject inputObject,
-			MoneyTransfer moneyTransfer) {
+			MoneyTransfer moneyTransfer) throws JSONException {
 		String output = "";
+		System.out.println("stringBuilder: " + stringBuilder);
 		try {
 			String appUrl = moneyTransfer.getAppUrl().concat(endPointUrl);
 			URL url = new URL(
@@ -69,10 +71,33 @@ public class RestClient {
 			// number
 			logger.info("after setting connection parameters");
 
-			String hashedString = RestClient.hashSHA512(stringBuilder, 1, true)
+			// String hashedString =
+			// "99b0196299352892423c5942530db7b7ad27bec9338d0145de3dd361e782570f279de3932815167fe96d5ab9b5406daa6736e9121a18d3ccca9b26c158e7301d";
+			String hashedString = RestClient.hashSHA512(stringBuilder, 0, true)
 					.toString();
 
-			String input = inputObject.toString();
+			// 1587aca733d40bfc77b5e62a54d66fa0eb79d3ebd4482ef46793074e65eef64032c07530c0500155b7b4a4735f5427486adac0383a302905a57d644b77feaea5
+
+			// inputObject.getString("referenceNumber")
+
+			String input = "{\"referenceNumber\":" + "\""
+					+ inputObject.getString("referenceNumber")
+					+ "\",\"locale\":" + "\"" + ""
+					+ "\",\"customerPhoneNumber\":" + "\""
+					+ inputObject.getString("customerPhoneNumber")
+					+ "\",\"amount\":" + inputObject.getString("amount")
+					+ ", \"withdrawalCode\":" + "\""
+					+ inputObject.getString("withdrawalCode") + "\"" + "}";
+
+			// String input = "{\"referenceNumber\":" + "973908158735"
+			// + ",\"locale\":" + "\"" + ""
+			// + "\",\"customerPhoneNumber\":" + "\""
+			// + inputObject.getString("customerPhoneNumber")
+			// + "\",\"amount\":" + inputObject.getString("amount")
+			// + ", \"withdrawalCode\":" + "\""
+			// + inputObject.getString("withdrawalCode") + "\"" + "}";
+
+			// String input = inputObject.toString();
 
 			conn.setRequestProperty("hash", hashedString);
 			logger.info("URL ---->" + appUrl);

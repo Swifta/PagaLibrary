@@ -14,7 +14,8 @@ public class PagaClient {
 			.getName());
 	RestClient restClient = new RestClient();
 
-	public PagaResponse performInterCustomerTransfer(MoneyTransfer moneyTransfer) {
+	public PagaResponse performInterCustomerTransfer(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/moneyTransfer";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -30,7 +31,7 @@ public class PagaClient {
 
 		try {
 			inputObject.put("referenceNumber", referenceNumber);
-			inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
 			inputObject
 					.put("senderPhoneNumber", moneyTransfer.getSenderPhone());
 			inputObject.put("senderName", moneyTransfer.getSenderName());
@@ -77,7 +78,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public PagaResponse performCashIn(MoneyTransfer moneyTransfer) {
+	public PagaResponse performCashIn(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/depositCash";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -132,7 +134,8 @@ public class PagaClient {
 
 	}
 
-	public PagaResponse performCashOut(MoneyTransfer moneyTransfer) {
+	public PagaResponse performCashOut(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/dispenseCash";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -148,10 +151,12 @@ public class PagaClient {
 
 		try {
 			inputObject.put("referenceNumber", referenceNumber);
-			inputObject.put("locale", moneyTransfer.getLocale());
+			// inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
 			inputObject.put("customerPhoneNumber",
 					moneyTransfer.getRecieverPhone());
 			inputObject.put("amount", moneyTransfer.getAmount());
+
 			inputObject
 					.put("withdrawalCode", moneyTransfer.getWithdrawalCode());
 		} catch (NullPointerException npe) {
@@ -163,6 +168,8 @@ public class PagaClient {
 
 		String output = restClient.connectToPaga(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
+		System.out.println(output);
+		System.out.println(sBuilder.toString());
 		try {
 			JSONObject outputObject = new JSONObject(output);
 
@@ -189,7 +196,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public PagaResponse performWalletToBank(MoneyTransfer moneyTransfer) {
+	public PagaResponse performWalletToBank(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/moneyTransferToBank";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -251,7 +259,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public String retrieveSettlementBank(MoneyTransfer moneyTransfer) {
+	public String retrieveSettlementBank(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "unsecured/getBanks";
 		String bankCode = "xxxx";
 		PagaResponse pagaResponse = new PagaResponse();

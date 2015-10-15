@@ -9,7 +9,7 @@ public class MoneyTransfer {
 	private String username = "";
 	private String senderPhone = "";
 	private String recieverPhone = "";
-	private String amount = "";
+	private long amount = 0L;
 	private String referenceNumberSize = "";
 	private String locale = "";
 	private String senderName = "";
@@ -81,11 +81,11 @@ public class MoneyTransfer {
 		this.recieverPhone = recieverPhone;
 	}
 
-	public String getAmount() {
+	public long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(long amount) {
 		this.amount = amount;
 	}
 

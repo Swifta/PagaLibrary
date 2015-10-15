@@ -47,7 +47,8 @@ public class PagaPropertyValues {
 				+ parameterType));
 		moneyTransfer.setRecieverPhone(prop.getProperty("Receivernumber_"
 				+ parameterType));
-		moneyTransfer.setAmount(prop.getProperty("Amount_" + parameterType));
+		moneyTransfer.setAmount(Long.valueOf(prop.getProperty("Amount_"
+				+ parameterType)));
 		moneyTransfer.setReferenceNumberSize(prop
 				.getProperty("Referencenumbersize_" + parameterType));
 
