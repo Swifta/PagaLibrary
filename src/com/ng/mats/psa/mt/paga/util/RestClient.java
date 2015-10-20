@@ -29,6 +29,7 @@ import org.json.me.JSONObject;
 
 import com.ng.mats.psa.mt.paga.data.MoneyTransfer;
 import com.ng.mats.psa.mt.paga.data.PagaPropertyValues;
+import com.ng.mats.psa.mt.paga.data.PagaResponse;
 
 public class RestClient {
 	// http://localhost:8080/RESTfulExample/json/product/get
@@ -41,7 +42,13 @@ public class RestClient {
 				.getPropertyValues();
 		PagaClient pagaClient = new PagaClient();
 		// pagaClient.performCashIn(moneyTransfer);
-		pagaClient.performCashOut(moneyTransfer);
+		PagaResponse pagaResponse = pagaClient.performCashOut(moneyTransfer);
+		System.out.println(pagaResponse.getDestinationpartnerbalanceafter());
+		System.out.println(pagaResponse.getFinancialtransactionid());
+		System.out.println(pagaResponse.getOrginatingpartnerbalanceafter());
+		System.out.println(pagaResponse.getOrginatingpartnerfee());
+		System.out.println(pagaResponse.getResponseCode());
+		System.out.println(pagaResponse.getResponseDescription());
 		// pagaClient.performWalletToBank(moneyTransfer);
 
 	}
