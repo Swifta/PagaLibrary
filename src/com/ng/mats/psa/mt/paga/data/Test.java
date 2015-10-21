@@ -66,6 +66,9 @@ public class Test {
 		String amount = "500";
 		String withdrawalCode = "90605";
 
+		// String json =
+		// {"responseCode":-1,"message":"Withdrawal code previously used successfully","dailyFloatLimitBalance":null,"isEmergencyFloatAllowed":null,"overdraftBalance":null,"overDraftSessionStatus":null,"availableBalance":null,"transactionId":null,"agentCommission":null,"customerName":null};
+
 		String input = "{\"referenceNumber\":" + "\"" + reference
 				+ "\",\"locale\":" + "\"" + locale
 				+ "\",\"customerPhoneNumber\":" + "\"" + customerPhoneNumber
