@@ -131,7 +131,7 @@ public class RestClient {
 			while ((output = br.readLine()) != null) {
 
 				logger.info(output);
-				break;
+				// break;
 			}
 			conn.disconnect();
 
