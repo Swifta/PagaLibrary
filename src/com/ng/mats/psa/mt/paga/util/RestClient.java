@@ -138,6 +138,8 @@ public class RestClient {
 		} catch (IOException exp) {
 			exp.printStackTrace();
 		}
+		logger.info("Output from Server .... \n" + output);
+
 		return output;
 	}
 

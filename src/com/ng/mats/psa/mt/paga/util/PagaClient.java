@@ -168,7 +168,7 @@ public class PagaClient {
 
 		String output = restClient.connectToPaga(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
-		logger.info(output);
+		logger.info("output from server: " + output);
 		logger.info(sBuilder.toString());
 		try {
 			JSONObject outputObject = new JSONObject(output);
