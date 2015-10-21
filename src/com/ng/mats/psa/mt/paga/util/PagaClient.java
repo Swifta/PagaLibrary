@@ -168,8 +168,8 @@ public class PagaClient {
 
 		String output = restClient.connectToPaga(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
-		System.out.println(output);
-		System.out.println(sBuilder.toString());
+		logger.info(output);
+		logger.info(sBuilder.toString());
 		try {
 			JSONObject outputObject = new JSONObject(output);
 
