@@ -9,7 +9,7 @@ public class MoneyTransfer {
 	private String username = "";
 	private String senderPhone = "";
 	private String recieverPhone = "";
-	private String amount = "";
+	private long amount = 0L;
 	private String referenceNumberSize = "";
 	private String locale = "";
 	private String senderName = "";
@@ -24,6 +24,10 @@ public class MoneyTransfer {
 	private String accountName = "";
 	private String transactionId = "";
 	private String accountPhoneNumber = "";
+	private String billerPubicId = "";
+	private String firstName = "";
+	private String lastName = "";
+	private String billServicename = "";
 
 	public String getAppId() {
 		return appId;
@@ -81,11 +85,11 @@ public class MoneyTransfer {
 		this.recieverPhone = recieverPhone;
 	}
 
-	public String getAmount() {
+	public long getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(long amount) {
 		this.amount = amount;
 	}
 
@@ -199,6 +203,38 @@ public class MoneyTransfer {
 
 	public void setAccountPhoneNumber(String accountPhoneNumber) {
 		this.accountPhoneNumber = accountPhoneNumber;
+	}
+
+	public String getBillerPubicId() {
+		return billerPubicId;
+	}
+
+	public void setBillerPubicId(String billerPubicId) {
+		this.billerPubicId = billerPubicId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getBillServicename() {
+		return billServicename;
+	}
+
+	public void setBillServicename(String billServicename) {
+		this.billServicename = billServicename;
 	}
 
 	public MoneyTransfer() {

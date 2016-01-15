@@ -1,7 +1,7 @@
 package com.ng.mats.psa.mt.paga.util;
 
-import java.util.logging.Logger;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.me.JSONArray;
 import org.json.me.JSONException;
 import org.json.me.JSONObject;
@@ -10,11 +10,11 @@ import com.ng.mats.psa.mt.paga.data.MoneyTransfer;
 import com.ng.mats.psa.mt.paga.data.PagaResponse;
 
 public class PagaClient {
-	private static final Logger logger = Logger.getLogger(PagaClient.class
-			.getName());
+	private static final Log logger = LogFactory.getLog(RestClient.class);
 	RestClient restClient = new RestClient();
 
-	public PagaResponse performInterCustomerTransfer(MoneyTransfer moneyTransfer) {
+	public PagaResponse performInterCustomerTransfer(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/moneyTransfer";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -30,7 +30,7 @@ public class PagaClient {
 
 		try {
 			inputObject.put("referenceNumber", referenceNumber);
-			inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
 			inputObject
 					.put("senderPhoneNumber", moneyTransfer.getSenderPhone());
 			inputObject.put("senderName", moneyTransfer.getSenderName());
@@ -49,9 +49,11 @@ public class PagaClient {
 			e.printStackTrace();
 		}
 
-		String output = restClient.connectToPaga(endPointUrl,
+		String output = restClient.connectToPagaa(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
 		try {
+			logger.info("Cashin result from paga::: " + output);
+
 			JSONObject outputObject = new JSONObject(output);
 
 			pagaResponse
@@ -59,6 +61,7 @@ public class PagaClient {
 
 			pagaResponse.setResponseDescription(outputObject
 					.getString("message"));
+
 			if (pagaResponse.getResponseCode().equals("0")) {
 				pagaResponse.setCompleteStatus(true);
 			} else {
@@ -77,7 +80,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public PagaResponse performCashIn(MoneyTransfer moneyTransfer) {
+	public PagaResponse performCashIn(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/depositCash";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -91,11 +95,14 @@ public class PagaClient {
 		JSONObject inputObject = new JSONObject();
 
 		try {
+			moneyTransfer.setWithdrawalCode(null);
 			inputObject.put("referenceNumber", referenceNumber);
 			inputObject.put("locale", moneyTransfer.getLocale());
 			inputObject.put("customerPhoneNumber",
 					moneyTransfer.getRecieverPhone());
 			inputObject.put("amount", moneyTransfer.getAmount());
+			inputObject
+					.put("withdrawalCode", moneyTransfer.getWithdrawalCode());
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 		} catch (JSONException e) {
@@ -103,9 +110,22 @@ public class PagaClient {
 			e.printStackTrace();
 		}
 
-		String output = restClient.connectToPaga(endPointUrl,
-				sBuilder.toString(), inputObject, moneyTransfer);
+		// String output = restClient.connectToPaga(endPointUrl,
+		// sBuilder.toString(), inputObject, moneyTransfer);
+
+		// String output = restClient.connectToPaga(endPointUrl,
+		// sBuilder.toString(), inputObject, moneyTransfer);
+
+		String output = "";
 		try {
+			output = RestClient.sendPost(sBuilder.toString(), endPointUrl,
+					inputObject, moneyTransfer);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+
 			JSONObject outputObject = new JSONObject(output);
 
 			pagaResponse
@@ -124,6 +144,8 @@ public class PagaClient {
 					.getString("availableBalance"));
 			pagaResponse.setOrginatingpartnerfee(outputObject
 					.getString("agentCommission"));
+			pagaResponse.setTrxid(outputObject.getString("transactionId"));
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -132,7 +154,8 @@ public class PagaClient {
 
 	}
 
-	public PagaResponse performCashOut(MoneyTransfer moneyTransfer) {
+	public PagaResponse performCashOut(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/dispenseCash";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -148,7 +171,8 @@ public class PagaClient {
 
 		try {
 			inputObject.put("referenceNumber", referenceNumber);
-			inputObject.put("locale", moneyTransfer.getLocale());
+			// inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
 			inputObject.put("customerPhoneNumber",
 					moneyTransfer.getRecieverPhone());
 			inputObject.put("amount", moneyTransfer.getAmount());
@@ -161,8 +185,10 @@ public class PagaClient {
 			e.printStackTrace();
 		}
 
-		String output = restClient.connectToPaga(endPointUrl,
+		String output = restClient.connectToPagaa(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
+		logger.info("output from server: " + output);
+		logger.info(sBuilder.toString());
 		try {
 			JSONObject outputObject = new JSONObject(output);
 
@@ -182,6 +208,7 @@ public class PagaClient {
 					.getString("availableBalance"));
 			pagaResponse.setOrginatingpartnerfee(outputObject
 					.getString("agentCommission"));
+			pagaResponse.setTrxid(outputObject.getString("transactionId"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -189,7 +216,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public PagaResponse performWalletToBank(MoneyTransfer moneyTransfer) {
+	public PagaResponse performWalletToBank(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "secured/moneyTransferToBank";
 		PagaResponse pagaResponse = new PagaResponse();
 		String referenceNumber = restClient.generateReferencenNumber(Integer
@@ -227,7 +255,7 @@ public class PagaClient {
 			e.printStackTrace();
 		}
 
-		String output = restClient.connectToPaga(endPointUrl,
+		String output = restClient.connectToPagaa(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
 		try {
 			JSONObject outputObject = new JSONObject(output);
@@ -251,7 +279,8 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public String retrieveSettlementBank(MoneyTransfer moneyTransfer) {
+	public String retrieveSettlementBank(MoneyTransfer moneyTransfer)
+			throws JSONException {
 		String endPointUrl = "unsecured/getBanks";
 		String bankCode = "xxxx";
 		PagaResponse pagaResponse = new PagaResponse();
@@ -273,7 +302,7 @@ public class PagaClient {
 			e.printStackTrace();
 		}
 
-		String output = restClient.connectToPaga(endPointUrl,
+		String output = restClient.connectToPagaa(endPointUrl,
 				sBuilder.toString(), inputObject, moneyTransfer);
 		try {
 			JSONObject outputObject = new JSONObject(output), bankContents;
@@ -326,4 +355,256 @@ public class PagaClient {
 		}
 		return bankCode;
 	}
+
+	public PagaResponse purchaseAirtime(MoneyTransfer moneyTransfer)
+			throws JSONException {
+		String endPointUrl = "secured/purchaseAirtime";
+		PagaResponse pagaResponse = new PagaResponse();
+		String referenceNumber = restClient.generateReferencenNumber(Integer
+				.valueOf(moneyTransfer.getReferenceNumberSize()));
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(referenceNumber);
+		sBuilder.append(moneyTransfer.getRecieverPhone()); // customer (phone
+		sBuilder.append(moneyTransfer.getAmount()); // amoun
+		sBuilder.append(moneyTransfer.getAppId());
+
+		JSONObject inputObject = new JSONObject();
+
+		try {
+			inputObject.put("referenceNumber", referenceNumber);
+			// inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
+			inputObject.put("customerPhoneNumber",
+					moneyTransfer.getRecieverPhone());
+			inputObject.put("amount", moneyTransfer.getAmount());
+
+			inputObject.put("quantity", "");
+			inputObject.put("message", "");
+			inputObject.put("identificationType", "");
+			inputObject.put("identificationNumber", "");
+			inputObject.put("operatorPublicId", "");
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String output = restClient.connectToPagaa(endPointUrl,
+				sBuilder.toString(), inputObject, moneyTransfer);
+		logger.info("output from server: " + output);
+		logger.info(sBuilder.toString());
+		try {
+			JSONObject outputObject = new JSONObject(output);
+
+			pagaResponse
+					.setResponseCode(outputObject.getString("responseCode"));
+
+			pagaResponse.setResponseDescription(outputObject
+					.getString("message"));
+			if (pagaResponse.getResponseCode().equals("0")) {
+				pagaResponse.setCompleteStatus(true);
+			} else {
+				pagaResponse.setCompleteStatus(false);
+			}
+			pagaResponse.setDestinationpartnerbalanceafter("");
+			pagaResponse.setFinancialtransactionid(referenceNumber);
+			pagaResponse.setOrginatingpartnerbalanceafter(outputObject
+					.getString("availableBalance"));
+			pagaResponse.setOrginatingpartnerfee(outputObject
+					.getString("agentCommission"));
+			pagaResponse.setTrxid(outputObject.getString("transactionId"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pagaResponse;
+	}
+
+	public PagaResponse getMerchant(MoneyTransfer moneyTransfer)
+			throws JSONException {
+		String endPointUrl = "unsecured/getMerchants";
+		PagaResponse pagaResponse = new PagaResponse();
+		String referenceNumber = restClient.generateReferencenNumber(Integer
+				.valueOf(moneyTransfer.getReferenceNumberSize()));
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(referenceNumber);
+		sBuilder.append(moneyTransfer.getRecieverPhone()); // customer (phone
+		sBuilder.append(moneyTransfer.getAmount()); // amoun
+		sBuilder.append(moneyTransfer.getAppId());
+
+		JSONObject inputObject = new JSONObject();
+
+		try {
+			inputObject.put("referenceNumber", referenceNumber);
+			// inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
+			inputObject.put("customerPhoneNumber",
+					moneyTransfer.getRecieverPhone());
+			inputObject.put("amount", moneyTransfer.getAmount());
+
+			inputObject.put("quantity", "");
+			inputObject.put("message", "");
+			inputObject.put("identificationType", "");
+			inputObject.put("identificationNumber", "");
+			inputObject.put("operatorPublicId", "");
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String output = restClient.connectToPagaa(endPointUrl,
+				sBuilder.toString(), inputObject, moneyTransfer);
+		logger.info("output from server: " + output);
+		logger.info(sBuilder.toString());
+		try {
+			JSONObject outputObject = new JSONObject(output);
+
+			pagaResponse
+					.setResponseCode(outputObject.getString("responseCode"));
+
+			pagaResponse.setResponseDescription(outputObject
+					.getString("message"));
+			if (pagaResponse.getResponseCode().equals("0")) {
+				pagaResponse.setCompleteStatus(true);
+			} else {
+				pagaResponse.setCompleteStatus(false);
+			}
+			pagaResponse.setDestinationpartnerbalanceafter("");
+			pagaResponse.setFinancialtransactionid(referenceNumber);
+			pagaResponse.setOrginatingpartnerbalanceafter(outputObject
+					.getString("availableBalance"));
+			pagaResponse.setOrginatingpartnerfee(outputObject
+					.getString("agentCommission"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pagaResponse;
+	}
+
+	public PagaResponse getMerchantServices(MoneyTransfer moneyTransfer)
+			throws JSONException {
+		String endPointUrl = "unsecured/getMerchantServices";
+		PagaResponse pagaResponse = new PagaResponse();
+		String referenceNumber = restClient.generateReferencenNumber(Integer
+				.valueOf(moneyTransfer.getReferenceNumberSize()));
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(referenceNumber);
+		sBuilder.append(moneyTransfer.getRecieverPhone()); // customer (phone
+		sBuilder.append(moneyTransfer.getAmount()); // amoun
+		sBuilder.append(moneyTransfer.getAppId());
+
+		JSONObject inputObject = new JSONObject();
+
+		try {
+			inputObject.put("billerPublicId", moneyTransfer.getBillerPubicId());
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String output = restClient.connectToPagaa(endPointUrl,
+				sBuilder.toString(), inputObject, moneyTransfer);
+		logger.info("output from server: " + output);
+		logger.info(sBuilder.toString());
+		try {
+			JSONObject outputObject = new JSONObject(output);
+
+			pagaResponse
+					.setResponseCode(outputObject.getString("responseCode"));
+
+			pagaResponse.setResponseDescription(outputObject
+					.getString("message"));
+			if (pagaResponse.getResponseCode().equals("0")) {
+				pagaResponse.setCompleteStatus(true);
+			} else {
+				pagaResponse.setCompleteStatus(false);
+			}
+			pagaResponse.setDestinationpartnerbalanceafter("");
+			pagaResponse.setFinancialtransactionid(referenceNumber);
+			pagaResponse.setOrginatingpartnerbalanceafter(outputObject
+					.getString("availableBalance"));
+			pagaResponse.setOrginatingpartnerfee(outputObject
+					.getString("agentCommission"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pagaResponse;
+	}
+
+	public PagaResponse payMerchant(MoneyTransfer moneyTransfer)
+			throws JSONException {
+		String endPointUrl = "secured/payMerchant";
+		PagaResponse pagaResponse = new PagaResponse();
+		String referenceNumber = restClient.generateReferencenNumber(Integer
+				.valueOf(moneyTransfer.getReferenceNumberSize()));
+		StringBuilder sBuilder = new StringBuilder();
+		sBuilder.append(referenceNumber);
+		sBuilder.append(moneyTransfer.getBillerPubicId()); // customer (phone
+		// moneyTransfer.getAccountNumber();
+		sBuilder.append(moneyTransfer.getAccountNumber());
+		sBuilder.append(moneyTransfer.getRecieverPhone());
+		sBuilder.append(moneyTransfer.getAmount()); // amoun
+		sBuilder.append(moneyTransfer.getAppId());
+
+		JSONObject inputObject = new JSONObject();
+
+		try {
+			inputObject.put("referenceNumber", referenceNumber);
+			// inputObject.put("locale", moneyTransfer.getLocale());
+			inputObject.put("locale", "");
+			inputObject.put("billerPublicId", moneyTransfer.getBillerPubicId());
+			inputObject.put("customerPhoneNumber",
+					moneyTransfer.getRecieverPhone());
+			inputObject.put("amount", moneyTransfer.getAmount());
+
+			inputObject.put("customerCodeAtBiller",
+					moneyTransfer.getAccountNumber());
+			inputObject.put("customerFirstName", moneyTransfer.getFirstName());
+			inputObject.put("customerLastName", moneyTransfer.getLastName());
+			inputObject.put("serviceName", moneyTransfer.getBillServicename());
+
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		String output = restClient.connectToPagaa(endPointUrl,
+				sBuilder.toString(), inputObject, moneyTransfer);
+		logger.info("output from server: " + output);
+		logger.info(sBuilder.toString());
+		try {
+			JSONObject outputObject = new JSONObject(output);
+
+			pagaResponse
+					.setResponseCode(outputObject.getString("responseCode"));
+
+			pagaResponse.setResponseDescription(outputObject
+					.getString("message"));
+			if (pagaResponse.getResponseCode().equals("0")) {
+				pagaResponse.setCompleteStatus(true);
+			} else {
+				pagaResponse.setCompleteStatus(false);
+			}
+			pagaResponse.setDestinationpartnerbalanceafter("");
+			pagaResponse.setFinancialtransactionid(referenceNumber);
+			pagaResponse.setOrginatingpartnerbalanceafter(outputObject
+					.getString("availableBalance"));
+			pagaResponse.setOrginatingpartnerfee(outputObject
+					.getString("agentCommission"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pagaResponse;
+	}
+
 }
