@@ -74,6 +74,14 @@ public class PagaPropertyValues {
 				+ parameterType));
 		moneyTransfer.setAccountPhoneNumber(prop
 				.getProperty("AccountPhoneNumber_" + parameterType));
+		moneyTransfer.setBillerPubicId(prop.getProperty("billerPubicId_"
+				+ parameterType));
+		moneyTransfer.setBillServicename(prop.getProperty("billServiceName_"
+				+ parameterType));
+		moneyTransfer.setFirstName(prop.getProperty("billFirstName_"
+				+ parameterType));
+		moneyTransfer.setLastName(prop.getProperty("billLastName_"
+				+ parameterType));
 
 		return moneyTransfer;
 	}

@@ -1,6 +1,5 @@
 package com.ng.mats.psa.mt.paga.data;
 
-
 public class PagaResponse {
 	public String orginatingpartnerfee;
 	public String orginatingpartnerbalanceafter;
@@ -8,6 +7,7 @@ public class PagaResponse {
 	public String financialtransactionid;
 	public String responseCode;
 	public String responseDescription;
+	public String trxid;
 	public boolean completeStatus;
 
 	public String getOrginatingpartnerfee() {
@@ -66,6 +66,14 @@ public class PagaResponse {
 
 	public void setCompleteStatus(boolean completeStatus) {
 		this.completeStatus = completeStatus;
+	}
+
+	public String getTrxid() {
+		return trxid;
+	}
+
+	public void setTrxid(String trxid) {
+		this.trxid = trxid;
 	}
 
 }

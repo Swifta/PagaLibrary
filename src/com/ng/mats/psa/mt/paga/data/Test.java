@@ -38,7 +38,7 @@ public class Test {
 
 		// String expectedJsonString =
 		// """{"a":"foo1","b":100,"c":1000.21,"d":true,"e":"foo2","f":"foo3","g":"foo4","h":"foo5"}"""
-		//
+		// transactionId = RandomStringUtils.randomNumeric(length);
 		// // string representation of json objects are same
 		// assertEquals(expectedJsonString, json.toString())
 		// // json objects are equal
@@ -69,11 +69,9 @@ public class Test {
 		// String json =
 		// {"responseCode":-1,"message":"Withdrawal code previously used successfully","dailyFloatLimitBalance":null,"isEmergencyFloatAllowed":null,"overdraftBalance":null,"overDraftSessionStatus":null,"availableBalance":null,"transactionId":null,"agentCommission":null,"customerName":null};
 
-		String input = "{\"referenceNumber\":" + "\"" + reference
-				+ "\",\"locale\":" + "\"" + locale
-				+ "\",\"customerPhoneNumber\":" + "\"" + customerPhoneNumber
-				+ "\",\"amount\":" + amount + ", \"withdrawalCode\":" + "\""
-				+ withdrawalCode + "\"" + "}";
+		String input = "{\"referenceNumber\":" + "\"" + "2334"
+				+ "\",\"locale\":" + "\"" + "" + "\",\"customerPhoneNumber\":"
+				+ "\"" + "2343434" + "\",\"amount\":" + 20000 + "}";
 
 		// JSONObject orderedJson = new JSONObject(jsonOrderedMap);
 
@@ -84,7 +82,11 @@ public class Test {
 		// System.out.println("Ordered JSON Fianl CSV :: "
 		// + orderedJson.toString());
 
-		// System.out.println(input);
+		long startTime = System.nanoTime();
+		// ... the code being measured ...
+		long estimatedTime = System.nanoTime() - startTime;
+
+		System.out.println(startTime);
 		// Test.testOrdered();
 
 		// System.out
@@ -94,16 +96,16 @@ public class Test {
 		// System.out
 		// .println(hashText("37004900367308177777722100028033sfe5bf404-4085-4d8f-ac00-ff8cc67ea718"));
 
-		Test test2 = new Test();
-		test2.hex("37004900367308177777722100028033fe5bf404-4085-4d8f-ac00-ff8cc67ea718");
-
-		String text = (Test
-				.hashSHA512(
-						"37004900367308177777722100028033fe5bf404-4085-4d8f-ac00-ff8cc67ea718",
-						0, true)).toString();
-		System.out.println(text);
-
-		test2.stringbuild();
+		// Test test2 = new Test();
+		// test2.hex("37004900367308177777722100028033fe5bf404-4085-4d8f-ac00-ff8cc67ea718");
+		//
+		// String text = (Test
+		// .hashSHA512(
+		// "37004900367308177777722100028033fe5bf404-4085-4d8f-ac00-ff8cc67ea718",
+		// 0, true)).toString();
+		// System.out.println(text);
+		//
+		// test2.stringbuild();
 
 		// System.out
 		// .println(test2

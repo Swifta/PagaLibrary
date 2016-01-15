@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="lib/json_bb.jar"/>
 	<classpathentry kind="lib" path="/Users/modupealadeojebi/Desktop/jsf/org.json-20120521.jar"/>
 	<classpathentry kind="lib" path="lib/bcprov-jdk15-132.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.httpclient.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
