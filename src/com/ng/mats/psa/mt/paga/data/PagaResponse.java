@@ -10,6 +10,16 @@ public class PagaResponse {
 	public String trxid;
 	public boolean completeStatus;
 
+	public String biller;
+
+	public String getBiller() {
+		return biller;
+	}
+
+	public void setBiller(String biller) {
+		this.biller = biller;
+	}
+
 	public String getOrginatingpartnerfee() {
 		return orginatingpartnerfee;
 	}

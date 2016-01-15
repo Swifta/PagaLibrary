@@ -421,10 +421,12 @@ public class PagaClient {
 		return pagaResponse;
 	}
 
-	public PagaResponse getMerchant(MoneyTransfer moneyTransfer)
+	public PagaResponse[] getMerchant(MoneyTransfer moneyTransfer)
 			throws JSONException {
 		String endPointUrl = "unsecured/getMerchants";
 		PagaResponse pagaResponse = new PagaResponse();
+
+		PagaResponse[] pagaResponses = null;
 		String referenceNumber = restClient.generateReferencenNumber(Integer
 				.valueOf(moneyTransfer.getReferenceNumberSize()));
 		StringBuilder sBuilder = new StringBuilder();
@@ -472,17 +474,30 @@ public class PagaClient {
 			} else {
 				pagaResponse.setCompleteStatus(false);
 			}
-			pagaResponse.setDestinationpartnerbalanceafter("");
-			pagaResponse.setFinancialtransactionid(referenceNumber);
-			pagaResponse.setOrginatingpartnerbalanceafter(outputObject
-					.getString("availableBalance"));
-			pagaResponse.setOrginatingpartnerfee(outputObject
-					.getString("agentCommission"));
+			/*
+			 * pagaResponse.setDestinationpartnerbalanceafter("");
+			 * pagaResponse.setFinancialtransactionid(referenceNumber);
+			 * pagaResponse.setOrginatingpartnerbalanceafter(outputObject
+			 * .getString("availableBalance"));
+			 * pagaResponse.setOrginatingpartnerfee(outputObject
+			 * .getString("agentCommission"));
+			 */
+
+			JSONArray billers = outputObject.getJSONArray("billers");
+			pagaResponses = new PagaResponse[billers.length()];
+			for (int i = 0; i < billers.length(); i++) {
+				pagaResponse = new PagaResponse();
+				pagaResponse.setBiller(billers.getJSONObject(i).getString(
+						"displayName"));
+				pagaResponses[i] = pagaResponse;
+			}
+
+			System.out.println();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return pagaResponse;
+		return pagaResponses;
 	}
 
 	public PagaResponse getMerchantServices(MoneyTransfer moneyTransfer)

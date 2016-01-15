@@ -56,18 +56,24 @@ public class RestClient {
 		// pagaClient.performCashOut(moneyTransfer);
 		// pagaClient.payMerchant(moneyTransfer);
 		// pagaClient.performCashIn(moneyTransfer);
-		PagaResponse pagaResponse = pagaClient.purchaseAirtime(moneyTransfer);
-		// PagaResponse pagaResponse = pagaClient.getMerchant(moneyTransfer);
+		// PagaResponse pagaResponse =
+		// pagaClient.purchaseAirtime(moneyTransfer);
+		PagaResponse[] pagaResponses = pagaClient.getMerchant(moneyTransfer);
+
+		for (PagaResponse pr : pagaResponses)
+			System.out.println(pr.getBiller());
+
 		// PagaResponse pagaResponse = pagaClient
 		// .getMerchantServices(moneyTransfer);
-		System.out.println(pagaResponse.getDestinationpartnerbalanceafter());
-		System.out.println(pagaResponse.getFinancialtransactionid());
-		System.out.println("its me>>>>" + pagaResponse.getTrxid());
-		System.out.println(pagaResponse.getOrginatingpartnerbalanceafter());
-		System.out.println(pagaResponse.getOrginatingpartnerfee());
-		System.out.println(pagaResponse.getResponseCode());
-		System.out.println(pagaResponse.getResponseDescription());
-		System.out.println(pagaResponse.getTrxid());
+		// System.out.println(pagaResponse.getDestinationpartnerbalanceafter());
+		// System.out.println(pagaResponse.getFinancialtransactionid());
+		// System.out.println("its me>>>>" + pagaResponse.getTrxid());
+		// System.out.println(pagaResponse.getOrginatingpartnerbalanceafter());
+		// System.out.println(pagaResponse.getOrginatingpartnerfee());
+		// System.out.println(pagaResponse.getResponseCode());
+		// System.out.println(pagaResponse.getResponseDescription());
+
+		// System.out.println(pagaResponse.getBillers());
 
 		// pagaClient.performWalletToBank(moneyTransfer);
 
